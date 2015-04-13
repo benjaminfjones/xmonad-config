@@ -1,6 +1,7 @@
--- xmonad config used by Vic Fryzel
+-- xmonad config
 -- Author: Vic Fryzel
--- http://github.com/vicfryzel/xmonad-config
+-- Modified: Benjamin Jones, 2015-04-12
+-- http://github.com/benjaminfjones/xmonad-config
 
 import System.IO
 import System.Exit
@@ -25,14 +26,14 @@ import qualified Data.Map        as M
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal = "/usr/bin/gnome-terminal"
+myTerminal = "/usr/bin/urxvt"
 
 
 ------------------------------------------------------------------------
 -- Workspaces
 -- The default number of workspaces (virtual screens) and their names.
 --
-myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]
+myWorkspaces = ["1:term","2:code","3:web"] ++ map show [4..9]
 
 
 ------------------------------------------------------------------------
@@ -50,16 +51,9 @@ myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ className =? "Chromium"       --> doShift "2:web"
-    , className =? "Google-chrome"  --> doShift "2:web"
+    [ className =? "Google-chrome-stable" --> doShift "3:web"
     , resource  =? "desktop_window" --> doIgnore
     , className =? "Galculator"     --> doFloat
-    , className =? "Steam"          --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , resource  =? "gpicview"       --> doFloat
-    , className =? "MPlayer"        --> doFloat
-    , className =? "VirtualBox"     --> doShift "4:vm"
-    , className =? "Xchat"          --> doShift "5:media"
     , className =? "stalonetray"    --> doIgnore
     , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
 
@@ -125,13 +119,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Custom key bindings
   --
 
-  -- Start a terminal.  Terminal to start is specified by myTerminal variable.
+  -- <mod-shift-Return> Start a terminal.  Terminal to start is specified by
+  -- myTerminal variable.
   [ ((modMask .|. shiftMask, xK_Return),
      spawn $ XMonad.terminal conf)
 
-  -- Lock the screen using xscreensaver.
-  , ((modMask .|. controlMask, xK_l),
-     spawn "xscreensaver-command -lock")
+  -- <mod-shift-c> Start a Google Chrome
+  , ((modMask .|. shiftMask, xK_c),
+     spawn $ "google-chrome-stable")
 
   -- Launch dmenu via yeganesh.
   -- Use this to launch programs without a key binding.
@@ -149,38 +144,45 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. controlMask .|. shiftMask, xK_p),
      spawn "screenshot")
 
-  -- Fetch a single use password.
-  , ((modMask .|. shiftMask, xK_o),
-     spawn "fetchotp -x")
+  --
+  -- DISABLED
+  --
 
+  -- Lock the screen using xscreensaver.
+  --, ((modMask .|. controlMask, xK_l),
+  --   spawn "xscreensaver-command -lock")
+  --
+  -- Fetch a single use password.
+  --, ((modMask .|. shiftMask, xK_o),
+  --   spawn "fetchotp -x")
 
   -- Mute volume.
-  , ((modMask .|. controlMask, xK_m),
-     spawn "amixer -q set Master toggle")
+  --, ((modMask .|. controlMask, xK_m),
+  --   spawn "amixer -q set Master toggle")
 
-  -- Decrease volume.
-  , ((modMask .|. controlMask, xK_j),
-     spawn "amixer -q set Master 10%-")
+  ---- Decrease volume.
+  --, ((modMask .|. controlMask, xK_j),
+  --   spawn "amixer -q set Master 10%-")
 
-  -- Increase volume.
-  , ((modMask .|. controlMask, xK_k),
-     spawn "amixer -q set Master 10%+")
+  ---- Increase volume.
+  --, ((modMask .|. controlMask, xK_k),
+  --   spawn "amixer -q set Master 10%+")
 
-  -- Audio previous.
-  , ((0, 0x1008FF16),
-     spawn "")
+  ---- Audio previous.
+  --, ((0, 0x1008FF16),
+  --   spawn "")
 
-  -- Play/pause.
-  , ((0, 0x1008FF14),
-     spawn "")
+  ---- Play/pause.
+  --, ((0, 0x1008FF14),
+  --   spawn "")
 
-  -- Audio next.
-  , ((0, 0x1008FF17),
-     spawn "")
+  ---- Audio next.
+  --, ((0, 0x1008FF17),
+  --   spawn "")
 
-  -- Eject CD tray.
-  , ((0, 0x1008FF2C),
-     spawn "eject -T")
+  ---- Eject CD tray.
+  --, ((0, 0x1008FF2C),
+  --   spawn "eject -T")
 
   --------------------------------------------------------------------
   -- "Standard" xmonad key bindings
